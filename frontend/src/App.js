@@ -11,7 +11,6 @@ const App = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    console.log(word);
     fetch(`https://api.unsplash.com/photos/random/?query=${ word }&client_id=${ UNSPLASH_KEY }`)
       .then((result) => result.json())
       .then((data) => {
@@ -20,6 +19,7 @@ const App = () => {
       .catch((error) => {
         console.log(error)
       });
+    setWord('');
   }
 
 
