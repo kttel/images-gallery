@@ -1,10 +1,10 @@
 import os
+import requests
 
 from dotenv import load_dotenv
 
 from flask import Flask, request
 from flask_cors import CORS
-import requests
 
 UNSPLASH_URL = "https://api.unsplash.com/photos/random"
 
