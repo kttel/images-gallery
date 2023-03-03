@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./components/Header";
@@ -12,16 +13,22 @@ const App = () => {
   const [word, setWord] = useState("");
   const [images, setImages] = useState([]);
 
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = async (e) => {
     e.preventDefault();
-    fetch(`${API_URL}/new-image?query=${word}`)
-      .then((result) => result.json())
-      .then((data) => {
-        setImages([{ title: word, ...data }, ...images]);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // fetch(`${API_URL}/new-image?query=${word}`)
+    //   .then((result) => result.json())
+    //   .then((data) => {
+    //     setImages([{ title: word, ...data }, ...images]);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    try {
+      const res = await axios.get(`${API_URL}/new-image?query=${word}`);
+      setImages([{ title: word, ...res.data }, ...images]);
+    } catch (error) {
+      console.log(error);
+    }
     setWord("");
   };
 
