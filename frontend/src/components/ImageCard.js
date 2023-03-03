@@ -6,7 +6,7 @@ const ImageCard = ({ image, deleteImage }) => {
       <Card.Img variant="top" src={image.urls.small} />
       <Card.Body>
         <Card.Title>
-          {image.title.charAt(0).toUpperCase() + image.title.slice(1)}
+          {image.title?.charAt(0).toUpperCase() + image.title.slice(1)}
         </Card.Title>
         <Card.Text>{image.description || image.alt_description}</Card.Text>
         <Button variant="dark" onClick={() => deleteImage(image.id)}>

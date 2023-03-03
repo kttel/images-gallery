@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./components/Header";
 import Search from "./components/Search";
@@ -13,16 +13,19 @@ const App = () => {
   const [word, setWord] = useState("");
   const [images, setImages] = useState([]);
 
+  const getSavedImages = async (e) => {
+    try {
+      const res = await axios.get(`${API_URL}/images`);
+      setImages(res.data || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => getSavedImages(), []);
+
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
-    // fetch(`${API_URL}/new-image?query=${word}`)
-    //   .then((result) => result.json())
-    //   .then((data) => {
-    //     setImages([{ title: word, ...data }, ...images]);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
     try {
       const res = await axios.get(`${API_URL}/new-image?query=${word}`);
       setImages([{ title: word, ...res.data }, ...images]);
