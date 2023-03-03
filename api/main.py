@@ -3,8 +3,14 @@ import requests
 
 from dotenv import load_dotenv
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
+
+from mongo_client import mongo_client
+
+
+gallery = mongo_client.gallery
+images_collection = gallery.images
 
 UNSPLASH_URL = "https://api.unsplash.com/photos/random"
 
@@ -23,6 +29,9 @@ CORS(app)
 
 @app.route("/new-image")
 def new_image():
+    """
+    API endpoint to retrieve new image from Unsplash API.
+    """
     word = request.args.get("query")
     headers = {
         "Accept-Version": "v1",
@@ -31,6 +40,22 @@ def new_image():
     params = {"query": word}
     response = requests.get(UNSPLASH_URL, headers=headers, params=params)
     return response.json()
+
+
+@app.route("images", methods=["GET", "POST"])
+def images():
+    """
+    API endpoint to retrieve all saved images and save new images.
+    """
+    if request.method == "GET":
+        res_images = images_collection.find({})
+        return jsonify([img for img in res_images])
+    elif request.method == "POST":
+        image = request.get_json()
+        image["_id"] = image.get("id")
+        result = images_collection.insert_one(image)
+        inserted_id = result.inserted_id
+        return {"inserted_id": inserted_id}
 
 
 if __name__ == "__main__":
